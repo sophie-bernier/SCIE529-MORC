@@ -1,4 +1,4 @@
-function [Diesel_rated_power,Diesel_Consumption,LCC_diesel_generator]=Diesel_generator(inputValues,Power_grid)
+function [Diesel_rated_power,Diesel_Consumption,LCC_diesel_generator,CO2]=Diesel_generator(inputValues,Power_grid)
 
 Electric_load=inputValues.Electric_load;
 Specific_cost_diesel_generator=inputValues.Specific_cost_diesel_generator;

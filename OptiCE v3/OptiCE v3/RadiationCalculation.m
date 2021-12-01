@@ -1,7 +1,8 @@
-function  G_T_R= RadiationCalculation (inputValues,Tilt_angle,Azimuth_angle)
+function  [G_T_R,Hour_day,Solar_altitude,Solar_azimuth,Angle_incidence] = RadiationCalculation (inputValues,Tilt_angle,Azimuth_angle)
 % The function calculation the radiation. 
 
 G_H_R=inputValues.G_H_R;
+bifacial_eta=inputValues.bifacial_eta;
 D_H_R=inputValues.D_H_R;             
 Ambient_temperature=inputValues.Ambient_temperature;
 Wind_speed=inputValues.Wind_speed;
@@ -28,16 +29,13 @@ Solar_altitude=asin(cos(declination.*pi/180).*cos(Hour_angle.*pi/180).*cos(Latit
 
 
 
-
-
-
 Solar_azimuth=zeros(size(Hour_angle));
 ind=find(Hour_angle==0);
 Solar_azimuth(ind)=0;
 ind=find(Hour_angle<0);
-Solar_azimuth(ind)=acos((cos(declination(ind).*pi/180).*cos(Hour_angle(ind).*pi/180).*sin(Latitude*pi/180)-sin(declination(ind).*pi/180).*cos(Latitude*pi/180))./cos(Solar_altitude(ind).*pi/180)).*Hour_angle(ind)./abs(Hour_angle(ind)).*180/pi;;
+Solar_azimuth(ind)=acos((cos(declination(ind).*pi/180).*cos(Hour_angle(ind).*pi/180).*sin(Latitude*pi/180)-sin(declination(ind).*pi/180).*cos(Latitude*pi/180))./cos(Solar_altitude(ind).*pi/180)).*Hour_angle(ind)./abs(Hour_angle(ind)).*180/pi;
 ind=find(Hour_angle>0);
-Solar_azimuth(ind)=acos((cos(declination(ind).*pi/180).*cos(Hour_angle(ind).*pi/180).*sin(Latitude*pi/180)-sin(declination(ind).*pi/180).*cos(Latitude*pi/180))./cos(Solar_altitude(ind).*pi/180)).*Hour_angle(ind)./abs(Hour_angle(ind)).*180/pi;;
+Solar_azimuth(ind)=acos((cos(declination(ind).*pi/180).*cos(Hour_angle(ind).*pi/180).*sin(Latitude*pi/180)-sin(declination(ind).*pi/180).*cos(Latitude*pi/180))./cos(Solar_altitude(ind).*pi/180)).*Hour_angle(ind)./abs(Hour_angle(ind)).*180/pi;
 
 Angle_incidence=acos(cos(Solar_altitude.*pi/180).*sin(Tilt_angle.*pi/180).*cos((Solar_azimuth-Azimuth_angle).*pi/180)+sin(Solar_altitude.*pi/180).*cos(Tilt_angle.*pi/180)).*180./pi;
 
@@ -49,7 +47,7 @@ B_N_R(ind)=B_H_R(ind)./(cos((90-Solar_altitude(ind)).*pi/180));
 
 B_T_R=zeros(size(Angle_incidence));
 ind=find(Angle_incidence>90);
-B_T_R(ind)=0;
+B_T_R(ind)=-bifacial_eta*B_N_R(ind).*cos(Angle_incidence(ind).*pi./180);
 ind=find(Angle_incidence<90);
 B_T_R(ind)=B_N_R(ind).*cos(Angle_incidence(ind).*pi./180);
 
