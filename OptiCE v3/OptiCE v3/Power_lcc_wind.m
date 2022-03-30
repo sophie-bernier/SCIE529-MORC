@@ -28,6 +28,12 @@ Power_wind(ind)=0;
 ind=find(Wind_tower<=Vr & Wind_tower>Vc);
 Power_wind(ind)=1/2*C_p*rho*eta_m*A_swept*Wind_tower(ind).^3;
 ind=find(Wind_tower<Vo & Wind_tower>Vr);
+%for idx = 1:length(Power_wind)
+%    if(Power_wind(idx) > Power_rated_wind)
+%        fprintf("FOO: IND:%u POWER:%f RATED:%f DEV:%u percent\n", ...
+%                idx, Power_wind(idx), Power_rated_wind, 100.*Power_wind(idx)./Power_rated_wind);
+%    end
+%end
 Power_wind(ind)=Power_rated_wind;
 ind=find(Wind_tower>=Vo);
 Power_wind(ind)=0;
